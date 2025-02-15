@@ -11,9 +11,9 @@ function start() {
     cat pid.log| xargs -I {} kill {}
     mv ${JAR_NAME} ${JAR_NAME}.bak
 
-    mvn clean install -Dmaven.test.skip=True -Pprod
+    mvn clean install -Dmaven.test.skip=True -Pdev
     cd ${WEB_PATH}
-    mvn clean package spring-boot:repackage -Dmaven.test.skip=true -Pprod
+    mvn clean package spring-boot:repackage -Dmaven.test.skip=true -Pdev
     cd -
 
     mv ${WEB_PATH}/target/${JAR_NAME} ./
