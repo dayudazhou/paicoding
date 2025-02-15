@@ -57,8 +57,8 @@ public class SidebarServiceImpl implements SidebarService {
     @Cacheable(key = "'homeSidebar'", cacheManager = "caffeineCacheManager", cacheNames = "home")
     public List<SideBarDTO> queryHomeSidebarList() {
         List<SideBarDTO> list = new ArrayList<>();
-        list.add(noticeSideBar());
-        list.add(columnSideBar());
+     //   list.add(noticeSideBar());
+     //   list.add(columnSideBar());
         list.add(hotArticles());
         SideBarDTO bar = rankList();
         if (bar != null) {
@@ -206,7 +206,7 @@ public class SidebarServiceImpl implements SidebarService {
     @Cacheable(key = "'columnSidebar'", cacheManager = "caffeineCacheManager", cacheNames = "column")
     public List<SideBarDTO> queryColumnSidebarList() {
         List<SideBarDTO> list = new ArrayList<>();
-        list.add(subscribeSideBar());
+     //   list.add(subscribeSideBar());
         return list;
     }
 

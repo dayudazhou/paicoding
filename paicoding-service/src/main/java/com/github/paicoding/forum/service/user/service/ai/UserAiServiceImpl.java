@@ -48,7 +48,8 @@ public class UserAiServiceImpl implements UserAiService {
      * @return
      */
     public int getMaxChatCnt(Long userId) {
-        UserAiDO ai = userAiDao.getOrInitAiInfo(userId);
+        return 100;
+        /*UserAiDO ai = userAiDao.getOrInitAiInfo(userId);
         int strategy = ai.getStrategy();
         int cnt = 0;
 
@@ -83,7 +84,7 @@ public class UserAiServiceImpl implements UserAiService {
             // 对于登录用户，给五次使用机会
             cnt = aiConfig.getMaxNum().getBasic();
         }
-        return cnt;
+        return cnt;*/
     }
 
     @Override

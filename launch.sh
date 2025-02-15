@@ -24,7 +24,6 @@ function start() {
 function restart() {
     # 杀掉之前的进程
     cat pid.log| xargs -I {} kill {}
-    # 重新启动
     run
 }
 
@@ -43,6 +42,8 @@ elif [ $1 == 'start' ]; then
   start
 elif [ $1 == 'restart' ];then
   restart
+elif [ $1 == 'run' ];then
+  run
 else
-  echo 'illegal command, support cmd: start | restart'
+  echo 'illegal command, support cmd: start | restart | run'
 fi

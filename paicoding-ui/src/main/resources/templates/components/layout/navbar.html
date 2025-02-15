@@ -49,7 +49,7 @@
                   th:class="${'nav-item' + (#strings.equals(global.currentDomain, 'chat') ? ' selected-domain' : '')}"
                   class="nav-item"
           >
-            <a class="nav-link" href="/chat">派聪明</a>
+            <a class="nav-link" href="/chat">派派聪明</a>
           </li>
         </ul>
       </div>
@@ -105,7 +105,7 @@
               </svg>
             </a>
           </li>
-          <li class="nav-item vip" th:if="${global.user != null && global.user.starStatus != null}">
+<!--          <li class="nav-item vip" th:if="${global.user != null && global.user.starStatus != null}">
             <div th:switch="${global.user.starStatus.code}">
               <span th:case="2" th:text="星球VIP会员"></span>
               <span th:case="1" th:text="待审核"></span>
@@ -114,7 +114,7 @@
               </a>
             </div>
             <img src="/img/vip.gif" alt="VIP" th:src="${global.siteInfo.oss + '/img/vip.gif'}"/>
-          </li>
+          </li>-->
 
           <!-- 头像框 -->
           <div class="nav-right-user">
@@ -215,7 +215,7 @@
                   </div>
                 </div>
                 <a class="clickable" data-toggle="modal" data-target="#registerModal" data-dismiss="modal">
-                  绑定星球，畅享VIP服务
+                  注册
                 </a>
               </div>
             </div>
@@ -279,7 +279,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h6 class="modal-title">绑定二哥编程星球，畅享 VIP 尊享服务！</h6>
+          <h6 class="modal-title">欢迎您！</h6>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -289,36 +289,36 @@
             <div class="register-main">
               <!-- 分为上下两部分，下面是其他登录比如说 GitHub、验证码 -->
               <div class="panel">
-                <h1 class="title">
+                <!--<h1 class="title">
                   <a target="_blank"
                      class="underline"
                      href="https://paicoding.com/article/detail/358">戳我了解如何获取星球编号，新窗口打开</a>
-                </h1>
+                </h1>-->
                 <form id="register-form">
-                  <div class="form-group">
+          <!--        <div class="form-group">
                     <input type="text"
                            placeholder="星球编号，戳上面的链接有详细教程"
                            class="form-control form-control-sm"
                            required
                            id="starNumber"
                            autocomplete="off">
-                  </div>
+                  </div>-->
                   <div class="form-group">
                     <input type="text"
-                           placeholder="用户名密码登录时用"
+                           placeholder="请输入用户名，用户名对他人可见哦～"
                            class="form-control form-control-sm"
                            id="registerUser" required>
                   </div>
                   <div class="form-group">
-                    <input type="password" placeholder="密码，你自己能记得住的" class="form-control form-control-sm" id="registerPassword" required>
+                    <input type="password" placeholder="请输入密码" class="form-control form-control-sm" id="registerPassword" required>
                   </div>
-                  <div class="form-group">
+                  <!--<div class="form-group">
                     <input type="text" placeholder="微信搜沉默王二回复邀请码获取，也可不填" class="form-control form-control-sm" id="invitationCode" autocomplete="off">
-                  </div>
+                  </div>-->
                   <!-- 绑定过会直接登录 -->
                   <button type="submit"
                           class="btn btn-primary btn-block btn-sm"
-                          th:text="${global.isLogin} ? '绑定' : '绑定后登录'">绑定/绑定后登录</button>
+                          th:text="${global.isLogin} ? '绑定' : '注册并登录'">绑定/注册并登录</button>
                 </form>
               </div>
             </div>
@@ -389,7 +389,7 @@
 
       // 获取用户名和密码，没有定义 ID
       const registerUser = $('#registerUser').val();
-      const starNumber = $("#starNumber").val() | '00000';
+      //const starNumber = $("#starNumber").val() | '00000';
       const password = $("#registerPassword").val();
       const invitationCode = $("#invitationCode").val();
 
@@ -398,7 +398,7 @@
         type: "POST",
         data: {
           username: registerUser,
-          starNumber: starNumber.toString().padStart(5, '0'), // "00001",
+        //  starNumber: starNumber.toString().padStart(5, '0'), // "00001",
           password: password,
           invitationCode: invitationCode
         },

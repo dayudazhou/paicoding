@@ -34,8 +34,11 @@ public class DeepSeekTest {
         body.put("messages", Arrays.asList(msg));
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-        return restTemplate.postForObject("https://api.deepseek.com/chat/completions", entity, String.class);
+//        return restTemplate.postForObject("https://api.deepseek.com/chat/completions", entity, String.class);
+
+        return restTemplate.postForObject("https://tbnx.plus7.plus/v1/chat/completions", entity, String.class);
     }
+
 
     @Test
     public void testChat() {

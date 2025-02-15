@@ -150,7 +150,7 @@ public class LoginServiceImpl implements LoginService {
         // 3. 尝试使用用户名进行登录，若成功，则依然走绑定流程
         UserDO user = userDao.getUserByUserName(loginReq.getUsername());
         if (user != null) {
-            if (!userPwdEncoder.match(loginReq.getPassword(), user.getPassword())) {
+            /*if (!userPwdEncoder.match(loginReq.getPassword(), user.getPassword())) {
                 // 3.1 用户名已经存在
                 throw ExceptionUtil.of(StatusEnum.USER_LOGIN_NAME_REPEAT, loginReq.getUsername());
             }
@@ -158,7 +158,8 @@ public class LoginServiceImpl implements LoginService {
             // 3.2 用户存在，尝试走绑定流程
             userId = user.getId();
             loginReq.setUserId(userId);
-            userAiService.initOrUpdateAiInfo(loginReq);
+            userAiService.initOrUpdateAiInfo(loginReq);*/
+            throw ExceptionUtil.of(StatusEnum.USER_LOGIN_NAME_REPEAT, loginReq.getUsername());
         } else {
             //4. 走用户注册流程
             userId = registerService.registerByUserNameAndPassword(loginReq);

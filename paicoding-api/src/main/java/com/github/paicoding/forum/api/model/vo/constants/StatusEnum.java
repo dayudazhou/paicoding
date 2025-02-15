@@ -70,7 +70,7 @@ public enum StatusEnum {
     USER_NOT_EXISTS(400_404_001, "用户不存在:%s"),
     USER_EXISTS(400_404_002, "用户已存在:%s"),
     // 用户登录名重复
-    USER_LOGIN_NAME_REPEAT(400_404_003, "用户登录名重复:%s"),
+    USER_LOGIN_NAME_REPEAT(400_404_003, "登录名已存在，请更换或使用该名直接登录:%s"),
     // 待审核
     USER_NOT_AUDIT(400_500_001, "用户未审核:%s"),
     // 星球编号不存在
