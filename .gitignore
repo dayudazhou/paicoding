@@ -48,3 +48,5 @@ pid.log
 # 支付证书相关移除
 paicoding-web/src/main/resources/cert
 /.mvn
+
+paicoding-web/src/main/resources-env/dev/application-dal.yml

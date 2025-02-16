@@ -70,6 +70,8 @@ public class RabbitmqServiceImpl implements RabbitmqService {
             Connection connection = rabbitmqConnection.getConnection();
             //创建消息信道
             final Channel channel = connection.createChannel();
+            //声明交换机，确保交换机存在
+            channel.exchangeDeclare(exchange,BuiltinExchangeType.DIRECT, true, false, null);
             //消息队列
             channel.queueDeclare(queueName, true, false, false, null);
             //绑定队列到交换机

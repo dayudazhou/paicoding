@@ -116,6 +116,10 @@
             <artifactId>volcengine-java-sdk-ark-runtime</artifactId>
             <version>0.1.150</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+        </dependency>
 
     </dependencies>
 

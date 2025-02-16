@@ -14,6 +14,7 @@ import com.github.paicoding.forum.service.user.repository.dao.UserDao;
 import com.github.paicoding.forum.service.user.repository.entity.UserAiDO;
 import com.github.paicoding.forum.service.user.repository.entity.UserDO;
 import com.github.paicoding.forum.service.user.repository.entity.UserInfoDO;
+import com.github.paicoding.forum.service.user.service.AuthorWhiteListService;
 import com.github.paicoding.forum.service.user.service.RegisterService;
 import com.github.paicoding.forum.service.user.service.help.UserPwdEncoder;
 import com.github.paicoding.forum.service.user.service.help.UserRandomGenHelper;
@@ -36,6 +37,9 @@ public class RegisterServiceImpl implements RegisterService {
 
     @Autowired
     private UserAiDao userAiDao;
+
+    @Autowired
+    private AuthorWhiteListService authorWhiteListService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -66,6 +70,9 @@ public class RegisterServiceImpl implements RegisterService {
         UserAiDO userAiDO = UserAiConverter.initAi(user.getId(), loginReq.getStarNumber());
         userAiDao.saveOrUpdateAiBindInfo(userAiDO, loginReq.getInvitationCode());
         processAfterUserRegister(user.getId());
+
+        //5. 用户自动加入白名单
+       // authorWhiteListService.addAuthor2ArticleWhitList(user.getId());
         return user.getId();
     }
 
