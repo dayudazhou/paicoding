@@ -2,8 +2,10 @@ package com.github.paicoding.forum.web;
 
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.paicoding.forum.core.config.RabbitmqProperties;
 import com.github.paicoding.forum.core.util.SocketUtil;
 import com.github.paicoding.forum.core.util.SpringUtil;
+import com.github.paicoding.forum.service.notify.service.RabbitmqService;
 import com.github.paicoding.forum.web.config.GlobalViewConfig;
 import com.github.paicoding.forum.web.global.ForumExceptionHandler;
 import com.github.paicoding.forum.web.hook.interceptor.GlobalViewInterceptor;
@@ -46,6 +48,10 @@ public class QuickForumApplication implements WebMvcConfigurer, ApplicationRunne
     @Resource
     private GlobalViewInterceptor globalViewInterceptor;
 
+    private RabbitmqProperties rabbitmqProperties;
+
+    private RabbitmqService rabbitmqService;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(globalViewInterceptor).addPathPatterns("/**");
@@ -86,6 +92,7 @@ public class QuickForumApplication implements WebMvcConfigurer, ApplicationRunne
         if (webPort != null) {
             config.setHost("http://127.0.0.1:" + webPort);
         }
+
         log.info("启动成功，点击进入首页: {}", config.getHost());
     }
 }

@@ -8,12 +8,19 @@ import com.github.paicoding.forum.api.model.vo.PageParam;
 import com.github.paicoding.forum.api.model.vo.notify.NotifyMsgEvent;
 import com.github.paicoding.forum.api.model.vo.user.UserRelationReq;
 import com.github.paicoding.forum.api.model.vo.user.dto.FollowUserInfoDTO;
+import com.github.paicoding.forum.core.common.CommonConstants;
+import com.github.paicoding.forum.core.util.JsonUtil;
 import com.github.paicoding.forum.core.util.MapUtils;
 import com.github.paicoding.forum.core.util.SpringUtil;
+import com.github.paicoding.forum.service.comment.repository.entity.CommentDO;
+import com.github.paicoding.forum.service.notify.repository.entity.FollowEventData;
+import com.github.paicoding.forum.service.notify.service.RabbitmqService;
 import com.github.paicoding.forum.service.user.converter.UserConverter;
 import com.github.paicoding.forum.service.user.repository.dao.UserRelationDao;
 import com.github.paicoding.forum.service.user.repository.entity.UserRelationDO;
 import com.github.paicoding.forum.service.user.service.UserRelationService;
+import com.rabbitmq.client.BuiltinExchangeType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -32,6 +39,8 @@ public class UserRelationServiceImpl implements UserRelationService {
     @Resource
     private UserRelationDao userRelationDao;
 
+    @Autowired
+    private RabbitmqService rabbitmqService;
 
     /**
      * 查询用户的关注列表
@@ -111,7 +120,27 @@ public class UserRelationServiceImpl implements UserRelationService {
             userRelationDO = UserConverter.toDO(req);
             userRelationDao.save(userRelationDO);
             // 发布关注事件
-            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.FOLLOW, userRelationDO));
+            if(rabbitmqService.enabled()){
+                Long currentUserId = null;
+                if (ReqInfoContext.getReqInfo() != null) {
+                    currentUserId = ReqInfoContext.getReqInfo().getUserId();
+                }
+                // 将关注信息与当前用户ID封装到FollowEventData中
+                FollowEventData followData = new FollowEventData();
+                followData.setRelation(userRelationDO);
+                followData.setPublisherUserId(currentUserId);
+
+                NotifyMsgEvent<FollowEventData> event = new NotifyMsgEvent<>(this, NotifyTypeEnum.FOLLOW, followData);
+                rabbitmqService.publishMsg(
+                        CommonConstants.EXCHANGE_NAME_DIRECT,
+                        BuiltinExchangeType.DIRECT,
+                        CommonConstants.QUERE_KEY_PRAISE,
+                        JsonUtil.toStr(event));
+            }
+            else{
+                SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.FOLLOW, userRelationDO));
+            }
+
             return;
         }
 
@@ -119,6 +148,25 @@ public class UserRelationServiceImpl implements UserRelationService {
         userRelationDO.setFollowState(req.getFollowed() ? FollowStateEnum.FOLLOW.getCode() : FollowStateEnum.CANCEL_FOLLOW.getCode());
         userRelationDao.updateById(userRelationDO);
         // 发布关注、取消关注事件
-        SpringUtil.publishEvent(new NotifyMsgEvent<>(this, req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, userRelationDO));
+        if(rabbitmqService.enabled()){
+            Long currentUserId = null;
+            if (ReqInfoContext.getReqInfo() != null) {
+                currentUserId = ReqInfoContext.getReqInfo().getUserId();
+            }
+            // 将关注信息与当前用户ID封装到FollowEventData中
+            FollowEventData followData = new FollowEventData();
+            followData.setRelation(userRelationDO);
+            followData.setPublisherUserId(currentUserId);
+
+            NotifyMsgEvent<FollowEventData> event = new NotifyMsgEvent<>(this, req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, followData);
+            rabbitmqService.publishMsg(
+                    CommonConstants.EXCHANGE_NAME_DIRECT,
+                    BuiltinExchangeType.DIRECT,
+                    CommonConstants.QUERE_KEY_PRAISE,
+                    JsonUtil.toStr(event));
+        }
+        else{
+            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, userRelationDO));
+        }
     }
 }

@@ -72,7 +72,8 @@ public class UserRandomGenHelper {
     /**
      * 头像自动选择
      *
-     * @return
+     * @return 头像链接，从网络上的url选取
+     * https://cdn.pixabay.com/photo/2023/08/05/14/24/twilight-8171206_1280.jpg
      */
     public static String genAvatar() {
         return String.format(AVATAR_TEMPLATE, RANDOM.nextInt(AVATAR_NUM) + 1);

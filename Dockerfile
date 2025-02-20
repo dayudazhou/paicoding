@@ -8,7 +8,7 @@ RUN mkdir -p $WORK_PATH
 # 将jar拷贝过去
 COPY /paicoding-web/target/$JAR_NAME $WORK_PATH/$JAR_NAME
 # 将说明文件也拷贝过去
-COPY /README.md $WORK_PATH/
+
 # 指定工作目录
 WORKDIR $WORK_PATH
 # 运行jar

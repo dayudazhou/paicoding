@@ -3,7 +3,7 @@ package com.github.paicoding.forum.api.model.enums.user;
 import lombok.Getter;
 
 /**
- * 派聪明用户状态枚举
+ * AI助手用户状态枚举
  */
 @Getter
 public enum UserAIStatEnum {

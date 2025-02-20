@@ -6,6 +6,8 @@ import com.github.paicoding.forum.api.model.exception.ExceptionUtil;
 import com.github.paicoding.forum.api.model.vo.comment.CommentSaveReq;
 import com.github.paicoding.forum.api.model.vo.constants.StatusEnum;
 import com.github.paicoding.forum.api.model.vo.notify.NotifyMsgEvent;
+import com.github.paicoding.forum.core.common.CommonConstants;
+import com.github.paicoding.forum.core.util.JsonUtil;
 import com.github.paicoding.forum.core.util.NumUtil;
 import com.github.paicoding.forum.core.util.SpringUtil;
 import com.github.paicoding.forum.service.article.repository.entity.ArticleDO;
@@ -14,7 +16,10 @@ import com.github.paicoding.forum.service.comment.converter.CommentConverter;
 import com.github.paicoding.forum.service.comment.repository.dao.CommentDao;
 import com.github.paicoding.forum.service.comment.repository.entity.CommentDO;
 import com.github.paicoding.forum.service.comment.service.CommentWriteService;
+import com.github.paicoding.forum.service.notify.service.RabbitmqService;
+import com.github.paicoding.forum.service.user.repository.entity.UserFootDO;
 import com.github.paicoding.forum.service.user.service.UserFootService;
+import com.rabbitmq.client.BuiltinExchangeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +44,9 @@ public class CommentWriteServiceImpl implements CommentWriteService {
 
     @Autowired
     private UserFootService userFootWriteService;
+
+    @Autowired
+    private RabbitmqService rabbitmqService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -72,11 +80,32 @@ public class CommentWriteServiceImpl implements CommentWriteService {
         userFootWriteService.saveCommentFoot(commentDO, article.getUserId(), parentCommentUser);
 
         // 3. 发布添加/回复评论事件
-        SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.COMMENT, commentDO));
-        if (NumUtil.upZero(parentCommentUser)) {
-            // 评论回复事件
-            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.REPLY, commentDO));
+
+        if(rabbitmqService.enabled()){
+            NotifyMsgEvent<CommentDO> event = new NotifyMsgEvent<>(this, NotifyTypeEnum.COMMENT, commentDO);
+            rabbitmqService.publishMsg(
+                    CommonConstants.EXCHANGE_NAME_DIRECT,
+                    BuiltinExchangeType.DIRECT,
+                    CommonConstants.QUERE_KEY_PRAISE,
+                    JsonUtil.toStr(event));
+            if(NumUtil.upZero(parentCommentUser)){
+                event = new NotifyMsgEvent<>(this, NotifyTypeEnum.REPLY, commentDO);
+                rabbitmqService.publishMsg(
+                        CommonConstants.EXCHANGE_NAME_DIRECT,
+                        BuiltinExchangeType.DIRECT,
+                        CommonConstants.QUERE_KEY_PRAISE,
+                        JsonUtil.toStr(event));
+            }
         }
+
+        else{
+            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.COMMENT, commentDO));
+            if (NumUtil.upZero(parentCommentUser)) {
+                // 评论回复事件
+                SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.REPLY, commentDO));
+            }
+        }
+
         return commentDO;
     }
 
@@ -113,12 +142,32 @@ public class CommentWriteServiceImpl implements CommentWriteService {
         commentDao.updateById(commentDO);
         userFootWriteService.removeCommentFoot(commentDO, article.getUserId(), getParentCommentUser(commentDO.getParentCommentId()));
 
+
         // 3. 发布删除评论事件
-        SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.DELETE_COMMENT, commentDO));
-        if (NumUtil.upZero(commentDO.getParentCommentId())) {
-            // 评论
-            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.DELETE_REPLY, commentDO));
+        if(rabbitmqService.enabled()){
+            NotifyMsgEvent<CommentDO> event = new NotifyMsgEvent<>(this, NotifyTypeEnum.DELETE_COMMENT, commentDO);
+            rabbitmqService.publishMsg(
+                    CommonConstants.EXCHANGE_NAME_DIRECT,
+                    BuiltinExchangeType.DIRECT,
+                    CommonConstants.QUERE_KEY_PRAISE,
+                    JsonUtil.toStr(event));
+            if (NumUtil.upZero(commentDO.getParentCommentId())){
+                event = new NotifyMsgEvent<>(this, NotifyTypeEnum.DELETE_REPLY, commentDO);
+                rabbitmqService.publishMsg(
+                        CommonConstants.EXCHANGE_NAME_DIRECT,
+                        BuiltinExchangeType.DIRECT,
+                        CommonConstants.QUERE_KEY_PRAISE,
+                        JsonUtil.toStr(event));
+            }
         }
+        else{
+            SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.DELETE_COMMENT, commentDO));
+            if (NumUtil.upZero(commentDO.getParentCommentId())) {
+                // 评论
+                SpringUtil.publishEvent(new NotifyMsgEvent<>(this, NotifyTypeEnum.DELETE_REPLY, commentDO));
+            }
+        }
+
     }
 
 

@@ -30,18 +30,19 @@ public class PaiAiDemoServiceImpl extends AbsChatService {
     @Override
     public AiChatStatEnum doAnswer(Long user, ChatItemVo chat) {
         chat.initAnswer(qa(chat.getQuestion()));
+        chat.initAnswer("请先选择模型再提问哦");
         return AiChatStatEnum.END;
     }
 
     @Override
     public AiChatStatEnum doAsyncAnswer(Long user, ChatRecordsVo response, BiConsumer<AiChatStatEnum, ChatRecordsVo> consumer) {
         AsyncUtil.execute(() -> {
-            AsyncUtil.sleep(1500);
+            //AsyncUtil.sleep(1500);
             ChatItemVo item = response.getRecords().get(0);
             item.appendAnswer(qa(item.getQuestion()));
             consumer.accept(AiChatStatEnum.FIRST, response);
 
-            AsyncUtil.sleep(1200);
+            //AsyncUtil.sleep(1200);
             item.appendAnswer("\n" + ChatConstants.SWITCH_TO_OTHER_MODEL);
             item.setAnswerType(ChatAnswerTypeEnum.STREAM_END);
             consumer.accept(AiChatStatEnum.END, response);
@@ -53,7 +54,7 @@ public class PaiAiDemoServiceImpl extends AbsChatService {
         String ans = q.replace("吗", "");
         ans = StringUtils.replace(ans, "？", "!");
         ans = StringUtils.replace(ans, "?", "!");
-        return ans;
+        return "欢迎使用AI助手～";
     }
 
     @Override

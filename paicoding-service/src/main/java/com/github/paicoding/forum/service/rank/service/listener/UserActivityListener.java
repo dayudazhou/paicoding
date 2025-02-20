@@ -6,6 +6,7 @@ import com.github.paicoding.forum.api.model.event.ArticleMsgEvent;
 import com.github.paicoding.forum.api.model.vo.notify.NotifyMsgEvent;
 import com.github.paicoding.forum.service.article.repository.entity.ArticleDO;
 import com.github.paicoding.forum.service.comment.repository.entity.CommentDO;
+import com.github.paicoding.forum.service.notify.repository.entity.FollowEventData;
 import com.github.paicoding.forum.service.rank.service.UserActivityRankService;
 import com.github.paicoding.forum.service.rank.service.model.ActivityScoreBo;
 import com.github.paicoding.forum.service.user.repository.entity.UserFootDO;
@@ -57,12 +58,23 @@ public class UserActivityListener {
                 userActivityRankService.addActivityScore(ReqInfoContext.getReqInfo().getUserId(), new ActivityScoreBo().setPraise(false).setArticleId(foot.getDocumentId()));
                 break;
             case FOLLOW:
-                UserRelationDO relation = (UserRelationDO) msgEvent.getContent();
-                userActivityRankService.addActivityScore(ReqInfoContext.getReqInfo().getUserId(), new ActivityScoreBo().setFollow(true).setFollowedUserId(relation.getUserId()));
+//                UserRelationDO relation = (UserRelationDO) msgEvent.getContent();
+//                userActivityRankService.addActivityScore(ReqInfoContext.getReqInfo().getUserId(), new ActivityScoreBo().setFollow(true).setFollowedUserId(relation.getUserId()));
+                FollowEventData followData = (FollowEventData) msgEvent.getContent();
+                // 直接使用事件中携带的发布者userId，而不再依赖ReqInfoContext
+                userActivityRankService.addActivityScore(
+                        followData.getPublisherUserId(),
+                        new ActivityScoreBo().setFollow(true).setFollowedUserId(followData.getRelation().getUserId())
+                );
                 break;
             case CANCEL_FOLLOW:
-                relation = (UserRelationDO) msgEvent.getContent();
-                userActivityRankService.addActivityScore(ReqInfoContext.getReqInfo().getUserId(), new ActivityScoreBo().setFollow(false).setFollowedUserId(relation.getUserId()));
+//                relation = (UserRelationDO) msgEvent.getContent();
+//                userActivityRankService.addActivityScore(ReqInfoContext.getReqInfo().getUserId(), new ActivityScoreBo().setFollow(false).setFollowedUserId(relation.getUserId()));
+                FollowEventData followData1 = (FollowEventData) msgEvent.getContent();
+                userActivityRankService.addActivityScore(
+                        followData1.getPublisherUserId(),
+                        new ActivityScoreBo().setFollow(false).setFollowedUserId(followData1.getRelation().getUserId())
+                );
                 break;
             default:
         }

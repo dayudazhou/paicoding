@@ -41,21 +41,21 @@ public class WxAckHelper {
         List<WxImgTxtItemVo> imgTxtList = null;
         if ("subscribe".equalsIgnoreCase(eventType)) {
             // 订阅
-            textRes = "优秀的你一关注，二哥英俊的脸上就泛起了笑容。我这个废柴，既可以把程序人生写得风趣幽默，也可以把技术文章写得通俗易懂。\n" +
+/*            textRes = "优秀的你一关注，二哥英俊的脸上就泛起了笑容。我这个废柴，既可以把程序人生写得风趣幽默，也可以把技术文章写得通俗易懂。\n" +
                     "\n" +
                     "可能是 2023 年最硬核的面试学习资料，内容涵盖 Java、Spring、MySQL、Redis、计算机网络、操作系统、消息队列、分布式等，60 万+字，300 张+手绘图，GitHub 星标 9000+，相信一定能够帮助到你。\n" +
                     "\n" +
                     "<a href=\"https://mp.weixin.qq.com/s/kGmZpxeV3lj04yjA0KRUXA\">[勾引]PDF 戳这里获取，手慢无！</a>\n" +
                     "\n" +
-                    "没有什么使我停留——除了目的，纵然岸旁有玫瑰、有绿荫、有宁静的港湾，我是不系之舟。\n";
+                    "没有什么使我停留——除了目的，纵然岸旁有玫瑰、有绿荫、有宁静的港湾，我是不系之舟。\n";*/
         }
         // 下面是关键词回复
         else if (chatgptService.inChat(fromUser, content)) {
             try {
                 textRes = chatgptService.chat(fromUser, content);
             } catch (Exception e) {
-                log.error("派聪明 访问异常! content: {}", content, e);
-                textRes = "派聪明 出了点小状况，请稍后再试!";
+                log.error("AI助手访问异常! content: {}", content, e);
+                textRes = "AI助手 出了点小状况，请稍后再试!";
             }
         }
 

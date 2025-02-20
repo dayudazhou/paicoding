@@ -52,7 +52,9 @@
     let color = colorThief.getColor(img)
     console.log("newColor: ", color)
 
-    let rgb = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")"
+    // let rgb = "rgb(" + color[0] + "," + color[1] + "," + color[2] + ")"
+    // 根据图片动态调节首页置顶位置的背景色
+    let rgb = "rgb(51,68,102)"
     let div = document.getElementById("carouseWrap")
     div.style.background = rgb
     // fix bug excel id 4

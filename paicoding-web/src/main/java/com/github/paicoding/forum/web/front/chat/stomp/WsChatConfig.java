@@ -23,7 +23,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 @EnableWebSocketMessageBroker // 开启websocket代理
 public class WsChatConfig implements WebSocketMessageBrokerConfigurer {
     /**
-     * 这里定义的是客户端接收服务端消息的相关信息，如派聪明的回答： WsAnswerHelper#response 就是往 "/chat/rsp" 发送消息
+     * 这里定义的是客户端接收服务端消息的相关信息，如AI助手的回答： WsAnswerHelper#response 就是往 "/chat/rsp" 发送消息
      * 对应的前端订阅的也是 chat/index.html: stompClient.subscribe(`/user/chat/rsp`, xxx)
      *
      * @param config
@@ -32,7 +32,7 @@ public class WsChatConfig implements WebSocketMessageBrokerConfigurer {
     public void configureMessageBroker(MessageBrokerRegistry config) {
         // 开启一个简单的基于内存的消息代理，前缀是/user的将消息会转发给消息代理 broker
         // 然后再由消息代理，将消息广播给当前连接的客户端
-        // /chat broker用于派聪明聊天； /msg broker用于服务端给用户推送消息
+        // /chat broker用于AI助手聊天； /msg broker用于服务端给用户推送消息
         config.enableSimpleBroker("/chat", "/msg");
 
         // 表示配置一个或多个前缀，通过这些前缀过滤出需要被注解方法处理的消息。

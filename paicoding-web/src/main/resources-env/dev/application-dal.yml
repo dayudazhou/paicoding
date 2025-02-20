@@ -36,7 +36,7 @@ spring:
   # kafka配置
   kafka:
     # kafka地址
-    bootstrap-servers: 127.0.0.1:9092
+    bootstrap-servers: 192.168.0.105:9092
     # 生产者
     producer:
       retries: 0

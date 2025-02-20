@@ -106,15 +106,15 @@ public final class ChatConstants {
     /**
      * 异步聊天时返回得提示文案
      */
-    public static final String ASYNC_CHAT_TIP = "小派正在努力回答中, 耐心等待一下吧...";
+    public static final String ASYNC_CHAT_TIP = "正在努力回答中, 耐心等待一下吧...";
 
     /**
      * 请切换到其他大模型
      */
-    public static final String SWITCH_TO_OTHER_MODEL = "当前模型还在开发当中，请右上角下拉框切换到其他模型";
+    public static final String SWITCH_TO_OTHER_MODEL = "请右上角下拉框选择模型再使用";
 
 
-    public static final String SENSITIVE_QUESTION = "提问中包含敏感词:%s，请微信联系二哥「itwanger」加入白名单!";
+    public static final String SENSITIVE_QUESTION = "提问中包含敏感词:%s，请重试";
 
     /**
      * 提示词标识

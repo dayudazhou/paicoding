@@ -3,7 +3,9 @@ package com.github.paicoding.forum.service.notify.service;
 import com.github.paicoding.forum.api.model.enums.NotifyTypeEnum;
 import com.github.paicoding.forum.api.model.vo.PageListVo;
 import com.github.paicoding.forum.api.model.vo.PageParam;
+import com.github.paicoding.forum.api.model.vo.notify.NotifyMsgEvent;
 import com.github.paicoding.forum.api.model.vo.notify.dto.NotifyMsgDTO;
+import com.github.paicoding.forum.service.comment.repository.entity.CommentDO;
 import com.github.paicoding.forum.service.user.repository.entity.UserFootDO;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 
@@ -17,6 +19,7 @@ import java.util.Map;
  */
 public interface NotifyService {
     public static String NOTIFY_TOPIC = "/msg";
+
 
 
     /**
@@ -48,10 +51,16 @@ public interface NotifyService {
     /**
      * 保存通知
      *
-     * @param foot
-     * @param notifyTypeEnum
+     * @param
+     * @param
      */
-    void saveArticleNotify(UserFootDO foot, NotifyTypeEnum notifyTypeEnum);
+    public void saveArticleNotify(NotifyMsgEvent<UserFootDO> event);
+
+    public void saveCommentNotify(NotifyMsgEvent<CommentDO> event);
+
+    public void saveReplyNotify(NotifyMsgEvent<CommentDO> event);
+
+    public void removeArticleNotify(NotifyMsgEvent<UserFootDO> event);
 
 
     // -------------------------------------------- 下面是与用户的websocket长连接维护相关实现 -------------------------

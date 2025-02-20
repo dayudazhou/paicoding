@@ -74,9 +74,13 @@ public class AsyncUtil {
                 .setHandler(new ThreadPoolExecutor.CallerRunsPolicy())
                 .setThreadFactory(THREAD_FACTORY)
                 .buildFinalizable();
+
+
+
         // 包装一下线程池，避免出现上下文复用场景
         executorService = TtlExecutors.getTtlExecutorService(executorService);
         simpleTimeLimiter = SimpleTimeLimiter.create(executorService);
+
     }
 
 

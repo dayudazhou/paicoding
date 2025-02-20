@@ -5,6 +5,7 @@ import com.github.paicoding.forum.api.model.enums.NotifyTypeEnum;
 import com.github.paicoding.forum.api.model.enums.OperateTypeEnum;
 import com.github.paicoding.forum.api.model.vo.PageParam;
 import com.github.paicoding.forum.api.model.vo.ResVo;
+import com.github.paicoding.forum.api.model.vo.notify.NotifyMsgEvent;
 import com.github.paicoding.forum.api.model.vo.user.dto.SimpleUserInfoDTO;
 import com.github.paicoding.forum.api.model.vo.user.dto.UserFootStatisticDTO;
 import com.github.paicoding.forum.core.common.CommonConstants;
@@ -125,13 +126,26 @@ public class UserFootServiceImpl implements UserFootService {
         }
 
         // 点赞消息走 RabbitMQ，其它走 Java 内置消息机制
-        if (notifyType.equals(NotifyTypeEnum.PRAISE) && rabbitmqService.enabled()) {
+   /*     if (notifyType.equals(NotifyTypeEnum.PRAISE) && rabbitmqService.enabled()) {
+            NotifyMsgEvent<UserFootDO> event = new NotifyMsgEvent<>(this, notifyType, readUserFootDO);
             rabbitmqService.publishMsg(
                     CommonConstants.EXCHANGE_NAME_DIRECT,
                     BuiltinExchangeType.DIRECT,
                     CommonConstants.QUERE_KEY_PRAISE,
-                    JsonUtil.toStr(readUserFootDO));
-        } else {
+//                    JsonUtil.toStr(readUserFootDO));
+                    JsonUtil.toStr(event));
+        }*/
+
+        if (rabbitmqService.enabled()) {
+            NotifyMsgEvent<UserFootDO> event = new NotifyMsgEvent<>(this, notifyType, readUserFootDO);
+            rabbitmqService.publishMsg(
+                    CommonConstants.EXCHANGE_NAME_DIRECT,
+                    BuiltinExchangeType.DIRECT,
+                    CommonConstants.QUERE_KEY_PRAISE,
+//                    JsonUtil.toStr(readUserFootDO));
+                    JsonUtil.toStr(event));
+        }
+        else {
             MsgNotifyHelper.publish(notifyType, readUserFootDO);
         }
     }

@@ -1,6 +1,7 @@
 package com.github.paicoding.forum.core.util;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,6 +34,14 @@ public class JsonUtil {
     public static <T> T toObj(String str, Class<T> clz) {
         try {
             return jsonMapper.readValue(str, clz);
+        } catch (Exception e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
+
+    public static <T> T toObj(String str, TypeReference<T> typeReference) {
+        try {
+            return jsonMapper.readValue(str, typeReference);
         } catch (Exception e) {
             throw new UnsupportedOperationException(e);
         }

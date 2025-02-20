@@ -94,7 +94,7 @@ public abstract class AbsChatService implements ChatService {
             aiSource = source();
         }
         List<ChatItemVo> chats = chatHistoryService.listHistory(source(), user, ReqInfoContext.getReqInfo().getChatId(), null);
-        chats.add(0, new ChatItemVo().initAnswer(String.format("开始你和派聪明(%s-大模型)的AI之旅吧!", aiSource.getName())));
+        chats.add(0, new ChatItemVo().initAnswer(String.format("开始你和AI助手(%s-大模型)的AI之旅吧!", aiSource.getName())));
         ChatRecordsVo vo = new ChatRecordsVo();
         vo.setMaxCnt(getMaxQaCnt(user));
         vo.setUsedCnt(queryUserdCnt(user));
