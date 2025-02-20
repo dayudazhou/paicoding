@@ -14,7 +14,6 @@ import com.github.paicoding.forum.service.article.service.ArticleReadService;
 import com.github.paicoding.forum.service.comment.repository.entity.CommentDO;
 import com.github.paicoding.forum.service.comment.service.CommentReadService;
 import com.github.paicoding.forum.service.notify.repository.dao.NotifyMsgDao;
-import com.github.paicoding.forum.service.notify.repository.entity.FollowEventData;
 import com.github.paicoding.forum.service.notify.repository.entity.NotifyMsgDO;
 import com.github.paicoding.forum.service.notify.service.NotifyService;
 import com.github.paicoding.forum.service.user.repository.entity.UserFootDO;
@@ -80,11 +79,11 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
                 break;
             case FOLLOW:
 //                saveFollowNotify((NotifyMsgEvent<UserRelationDO>) msgEvent);
-                saveFollowNotify((NotifyMsgEvent<FollowEventData>) msgEvent);
+                saveFollowNotify((NotifyMsgEvent<UserRelationDO>) msgEvent);
                 break;
             case CANCEL_FOLLOW:
 //                removeFollowNotify((NotifyMsgEvent<UserRelationDO>) msgEvent);
-                removeFollowNotify((NotifyMsgEvent<FollowEventData>) msgEvent);
+                removeFollowNotify((NotifyMsgEvent<UserRelationDO>) msgEvent);
                 break;
             case LOGIN:
                 // todo 用户登录，判断是否需要插入新的通知消息，暂时先不做
@@ -213,10 +212,8 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
      *
      * @param event
      */
-    private void saveFollowNotify(NotifyMsgEvent<FollowEventData> event) {
-        FollowEventData followEventData = (FollowEventData) event.getContent();
-        UserRelationDO relation = followEventData.getRelation();
-//        UserRelationDO relation = event.getContent();
+    private void saveFollowNotify(NotifyMsgEvent<UserRelationDO> event) {
+        UserRelationDO relation = event.getContent();
         NotifyMsgDO msg = new NotifyMsgDO().setRelatedId(0L)
                 .setNotifyUserId(relation.getUserId())
                 .setOperateUserId(relation.getFollowUserId())
@@ -237,10 +234,8 @@ public class NotifyMsgListener<T> implements ApplicationListener<NotifyMsgEvent<
      *
      * @param event
      */
-    private void removeFollowNotify(NotifyMsgEvent<FollowEventData> event) {
-        FollowEventData followEventData = (FollowEventData) event.getContent();
-        UserRelationDO relation = followEventData.getRelation();
-     //   UserRelationDO relation = event.getContent();
+    private void removeFollowNotify(NotifyMsgEvent<UserRelationDO> event) {
+        UserRelationDO relation = event.getContent();
         NotifyMsgDO msg = new NotifyMsgDO()
                 .setRelatedId(0L)
                 .setNotifyUserId(relation.getUserId())

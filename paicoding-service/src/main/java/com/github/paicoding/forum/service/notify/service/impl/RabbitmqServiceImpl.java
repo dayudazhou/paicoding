@@ -2,7 +2,6 @@ package com.github.paicoding.forum.service.notify.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.github.paicoding.forum.api.model.context.ReqInfoContext;
 import com.github.paicoding.forum.api.model.enums.NotifyTypeEnum;
 import com.github.paicoding.forum.api.model.vo.notify.NotifyMsgEvent;
 import com.github.paicoding.forum.core.common.CommonConstants;
@@ -11,7 +10,6 @@ import com.github.paicoding.forum.core.rabbitmq.RabbitmqConnectionPool;
 import com.github.paicoding.forum.core.util.JsonUtil;
 import com.github.paicoding.forum.core.util.SpringUtil;
 import com.github.paicoding.forum.service.comment.repository.entity.CommentDO;
-import com.github.paicoding.forum.service.notify.repository.entity.FollowEventData;
 import com.github.paicoding.forum.service.notify.service.NotifyService;
 import com.github.paicoding.forum.service.notify.service.RabbitmqService;
 import com.github.paicoding.forum.service.user.repository.entity.UserFootDO;
@@ -138,7 +136,7 @@ public class RabbitmqServiceImpl implements RabbitmqService {
                     }
                     else if(notifyType == NotifyTypeEnum.FOLLOW
                     || notifyType == NotifyTypeEnum.CANCEL_FOLLOW){
-                        NotifyMsgEvent<FollowEventData> event1 = JsonUtil.toObj(message, new TypeReference<NotifyMsgEvent<FollowEventData>>() {});
+                        NotifyMsgEvent<UserRelationDO> event1 = JsonUtil.toObj(message, new TypeReference<NotifyMsgEvent<UserRelationDO>>() {});
                         publisher.publishEvent(event1);
                     }
 

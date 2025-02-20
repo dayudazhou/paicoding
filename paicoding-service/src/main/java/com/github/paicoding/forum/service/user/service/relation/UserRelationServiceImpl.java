@@ -12,8 +12,6 @@ import com.github.paicoding.forum.core.common.CommonConstants;
 import com.github.paicoding.forum.core.util.JsonUtil;
 import com.github.paicoding.forum.core.util.MapUtils;
 import com.github.paicoding.forum.core.util.SpringUtil;
-import com.github.paicoding.forum.service.comment.repository.entity.CommentDO;
-import com.github.paicoding.forum.service.notify.repository.entity.FollowEventData;
 import com.github.paicoding.forum.service.notify.service.RabbitmqService;
 import com.github.paicoding.forum.service.user.converter.UserConverter;
 import com.github.paicoding.forum.service.user.repository.dao.UserRelationDao;
@@ -125,12 +123,8 @@ public class UserRelationServiceImpl implements UserRelationService {
                 if (ReqInfoContext.getReqInfo() != null) {
                     currentUserId = ReqInfoContext.getReqInfo().getUserId();
                 }
-                // 将关注信息与当前用户ID封装到FollowEventData中
-                FollowEventData followData = new FollowEventData();
-                followData.setRelation(userRelationDO);
-                followData.setPublisherUserId(currentUserId);
 
-                NotifyMsgEvent<FollowEventData> event = new NotifyMsgEvent<>(this, NotifyTypeEnum.FOLLOW, followData);
+                NotifyMsgEvent<UserRelationDO> event = new NotifyMsgEvent<>(this, NotifyTypeEnum.FOLLOW, userRelationDO);
                 rabbitmqService.publishMsg(
                         CommonConstants.EXCHANGE_NAME_DIRECT,
                         BuiltinExchangeType.DIRECT,
@@ -153,12 +147,8 @@ public class UserRelationServiceImpl implements UserRelationService {
             if (ReqInfoContext.getReqInfo() != null) {
                 currentUserId = ReqInfoContext.getReqInfo().getUserId();
             }
-            // 将关注信息与当前用户ID封装到FollowEventData中
-            FollowEventData followData = new FollowEventData();
-            followData.setRelation(userRelationDO);
-            followData.setPublisherUserId(currentUserId);
 
-            NotifyMsgEvent<FollowEventData> event = new NotifyMsgEvent<>(this, req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, followData);
+            NotifyMsgEvent<UserRelationDO> event = new NotifyMsgEvent<>(this, req.getFollowed() ? NotifyTypeEnum.FOLLOW : NotifyTypeEnum.CANCEL_FOLLOW, userRelationDO);
             rabbitmqService.publishMsg(
                     CommonConstants.EXCHANGE_NAME_DIRECT,
                     BuiltinExchangeType.DIRECT,

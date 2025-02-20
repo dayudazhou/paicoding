@@ -7,7 +7,6 @@ import com.github.paicoding.forum.core.cache.RedisClient;
 import com.github.paicoding.forum.service.article.repository.dao.ArticleDao;
 import com.github.paicoding.forum.service.article.repository.entity.ArticleDO;
 import com.github.paicoding.forum.service.comment.repository.entity.CommentDO;
-import com.github.paicoding.forum.service.notify.repository.entity.FollowEventData;
 import com.github.paicoding.forum.service.user.repository.entity.UserFootDO;
 import com.github.paicoding.forum.service.user.repository.entity.UserRelationDO;
 import com.github.paicoding.forum.service.statistics.constants.CountConstants;
@@ -68,18 +67,14 @@ public class UserStatisticEventListener {
                 RedisClient.hIncr(CountConstants.ARTICLE_STATISTIC_INFO + foot.getDocumentId(), CountConstants.PRAISE_COUNT, -1);
                 break;
             case FOLLOW:
-                FollowEventData followEventData = (FollowEventData) msgEvent.getContent();
-                UserRelationDO relation = followEventData.getRelation();
-//                UserRelationDO relation = (UserRelationDO) msgEvent.getContent();
+                UserRelationDO relation = (UserRelationDO) msgEvent.getContent();
                 // 主用户粉丝数 + 1
                 RedisClient.hIncr(CountConstants.USER_STATISTIC_INFO + relation.getUserId(), CountConstants.FANS_COUNT, 1);
                 // 粉丝的关注数 + 1
                 RedisClient.hIncr(CountConstants.USER_STATISTIC_INFO + relation.getFollowUserId(), CountConstants.FOLLOW_COUNT, 1);
                 break;
             case CANCEL_FOLLOW:
-                followEventData = (FollowEventData) msgEvent.getContent();
-                relation = followEventData.getRelation();
-//                relation = (UserRelationDO) msgEvent.getContent();
+                relation = (UserRelationDO) msgEvent.getContent();
                 // 主用户粉丝数 + 1
                 RedisClient.hIncr(CountConstants.USER_STATISTIC_INFO + relation.getUserId(), CountConstants.FANS_COUNT, -1);
                 // 粉丝的关注数 + 1
