@@ -94,9 +94,10 @@ public class UserFootServiceImpl implements UserFootService {
         // fixme 解决方案：自旋等待的分布式锁 or 事务 + 悲观锁
         // fixme 考虑到这个足迹的准确性影响并不大，留待有缘人进行修正
 
-        // 查询是否有该足迹；有则更新，没有则插入
+        // 1. 查询是否有该足迹；
         UserFootDO readUserFootDO = userFootDao.getByDocumentAndUserId(documentId, documentType.getCode(), userId);
         boolean dbChanged = false;
+        // 2. 没有该足迹就插入
         if (readUserFootDO == null) {
             readUserFootDO = new UserFootDO();
             readUserFootDO.setUserId(userId);
@@ -106,9 +107,13 @@ public class UserFootServiceImpl implements UserFootService {
             setUserFootStat(readUserFootDO, operateTypeEnum);
             userFootDao.save(readUserFootDO);
             dbChanged = true;
-        } else if (setUserFootStat(readUserFootDO, operateTypeEnum)) {
+        }
+        // 3. 有该足迹，就更新足迹状态
+        // 足迹状态更新成功了就修改更新时间，
+        // 并且将更新后的用户足迹记录更新到数据库中
+        else if (setUserFootStat(readUserFootDO, operateTypeEnum)) {
             readUserFootDO.setUpdateTime(new Date());
-            userFootDao.updateById(readUserFootDO);
+            userFootDao.updateById(readUserFootDO); // 更新到数据库
             dbChanged = true;
         }
 
@@ -173,6 +178,8 @@ public class UserFootServiceImpl implements UserFootService {
 
     private boolean setUserFootStat(UserFootDO userFootDO, OperateTypeEnum operate) {
         switch (operate) {
+            // 下面的getDbStatCode()返回0或者1
+            // 实施的返回1，取消的返回0
             case READ:
                 // 设置为已读
                 userFootDO.setReadStat(1);
@@ -180,6 +187,8 @@ public class UserFootServiceImpl implements UserFootService {
                 return true;
             case PRAISE:
             case CANCEL_PRAISE:
+                // compareAndUpdate的作用是判断参数1和参数3是否相同，
+                // 相同就返回false，不同就将参数1置为参数3返回
                 return compareAndUpdate(userFootDO::getPraiseStat, userFootDO::setPraiseStat, operate.getDbStatCode());
             case COLLECTION:
             case CANCEL_COLLECTION:

@@ -156,10 +156,10 @@ public class AliOssWrapper implements ImageUploader, InitializingBean, Disposabl
     @Override
     public void afterPropertiesSet() {
         init();
-//        // 监听配置变更，然后重新初始化OSSClient实例
-//        dynamicConfigContainer.registerRefreshCallback(properties, () -> {
-//            init();
-//            log.info("ossClient refreshed!");
-//        });
+        // 监听配置变更，然后重新初始化OSSClient实例
+        dynamicConfigContainer.registerRefreshCallback(properties, () -> {
+            init();
+            log.info("ossClient refreshed!");
+        });
     }
 }

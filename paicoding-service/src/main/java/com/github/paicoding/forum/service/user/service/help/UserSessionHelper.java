@@ -65,6 +65,9 @@ public class UserSessionHelper {
 
         // 2.使用jwt生成的token时，后端可以不存储这个session信息, 完全依赖jwt的信息
         // 但是需要考虑到用户登出，需要主动失效这个token，而jwt本身无状态，所以再这里的redis做一个简单的token -> userId的缓存，用于双重判定
+        //目的：虽然 JWT 是无状态的，但这里在 Redis 中缓存 token 与 userId 的映射，主要用于实现用户主动登出或令牌主动失效功能。
+        //存储内容：将 token 作为 key，用户 ID（转换成字符串）作为 value 存入 Redis。
+        //设置过期时间：过期时间与 JWT 的有效期一致，单位转换为秒（jwtProperties.getExpire() / 1000）。
         RedisClient.setStrWithExpire(token, String.valueOf(userId), jwtProperties.getExpire() / 1000);
         return token;
     }

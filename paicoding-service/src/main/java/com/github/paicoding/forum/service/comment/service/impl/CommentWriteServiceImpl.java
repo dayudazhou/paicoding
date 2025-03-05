@@ -73,6 +73,7 @@ public class CommentWriteServiceImpl implements CommentWriteService {
         commentDao.save(commentDO);
 
         // 2. 保存足迹信息 : 文章的已评信息 + 评论的已评信息
+        // 获取评论对应的文章
         ArticleDO article = articleReadService.queryBasicArticle(commentSaveReq.getArticleId());
         if (article == null) {
             throw ExceptionUtil.of(StatusEnum.ARTICLE_NOT_EXISTS, commentSaveReq.getArticleId());
@@ -172,14 +173,18 @@ public class CommentWriteServiceImpl implements CommentWriteService {
 
 
     private Long getParentCommentUser(Long parentCommentId) {
+        // 如果parentId直接是空的就返回空值
         if (NumUtil.nullOrZero(parentCommentId)) {
             return null;
 
         }
+        // 调用内置的getById方法获取这一行记录
         CommentDO parent = commentDao.getById(parentCommentId);
+        // 没有这个父评论，抛出异常
         if (parent == null) {
             throw ExceptionUtil.of(StatusEnum.COMMENT_NOT_EXISTS, "父评论=" + parentCommentId);
         }
+        // 返回这个父评论的作者
         return parent.getUserId();
     }
 

@@ -133,7 +133,7 @@ public class ArticleRestController {
     }
 
     /**
-     * 查询所有的标签
+     * 生成文章摘要
      *
      * @return
      */

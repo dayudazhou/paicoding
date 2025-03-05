@@ -52,6 +52,7 @@ public class ArticleTagDao extends ServiceImpl<ArticleTagMapper, ArticleTagDO> {
      * @param newTags
      */
     public void updateTags(Long articleId, Set<Long> newTags) {
+        // 查询出当前的标签
         List<ArticleTagDO> dbTags = listArticleTags(articleId);
         // 在旧的里面，不在新的里面的标签，设置为删除
         List<Long> toDeleted = new ArrayList<>();

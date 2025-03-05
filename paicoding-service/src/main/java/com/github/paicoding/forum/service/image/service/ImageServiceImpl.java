@@ -43,6 +43,14 @@ public class ImageServiceImpl implements ImageService {
 
     /**
      * 外网图片转存缓存
+     * 缓存 key 是原始图片 URL，value 是转存后的图片 URL；
+     * 缓存大小上限为 300，缓存有效期为 5 分钟；
+     *
+     * CacheLoader 的 load 方法中，
+     * 利用 FileReadUtil.getStreamByFileName(img) 得到图片的输入流，
+     * 再解析 URL 得到文件后缀（如果有），
+     * 调用 imageUploader.upload(stream, fileType) 上传图片。
+     * 如果异常则记录错误并返回空字符串
      */
     private LoadingCache<String, String> imgReplaceCache = CacheBuilder.newBuilder().maximumSize(300).expireAfterWrite(5, TimeUnit.MINUTES).build(new CacheLoader<String, String>() {
         @Override

@@ -45,6 +45,7 @@ public class RegisterServiceImpl implements RegisterService {
     @Transactional(rollbackFor = Exception.class)
     public Long registerByUserNameAndPassword(UserPwdLoginReq loginReq) {
         // 1. 判断用户名是否准确
+        // 这里具体会返回名字是这个而且isDeleted不成立的结果
         UserDO user = userDao.getUserByUserName(loginReq.getUsername());
         if (user != null) {
             throw ExceptionUtil.of(StatusEnum.USER_LOGIN_NAME_REPEAT, loginReq.getUsername());
@@ -53,6 +54,7 @@ public class RegisterServiceImpl implements RegisterService {
         // 2. 保存用户登录信息
         user = new UserDO();
         user.setUserName(loginReq.getUsername());
+        // 密码加密存储，加密方法是MD5盐值加密
         user.setPassword(userPwdEncoder.encPwd(loginReq.getPassword()));
         user.setThirdAccountId("");
         // 用户名密码注册

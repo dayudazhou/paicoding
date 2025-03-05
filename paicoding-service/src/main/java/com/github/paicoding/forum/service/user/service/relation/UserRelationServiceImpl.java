@@ -59,8 +59,15 @@ public class UserRelationServiceImpl implements UserRelationService {
         return PageListVo.newVo(userRelationList, pageParam.getPageSize());
     }
 
+    /**
+     * 根据当前登录用户的 ID，检查该用户是否关注了列表中的各个用户，
+     * 并更新列表中对应的 relationId（关注关系记录 ID）以及 followed 状态
+     * @param followList
+     * @param loginUserId
+     */
     @Override
     public void updateUserFollowRelationId(PageListVo<FollowUserInfoDTO> followList, Long loginUserId) {
+        // 未登录，id为null，关注情况为false
         if (loginUserId == null) {
             followList.getList().forEach(r -> {
                 r.setRelationId(null);
@@ -70,13 +77,18 @@ public class UserRelationServiceImpl implements UserRelationService {
         }
 
         // 判断登录用户与给定的用户列表的关注关系
+        // 提取列表中所有的userId，使用集合存储避免重复 stream()流
         Set<Long> userIds = followList.getList().stream().map(FollowUserInfoDTO::getUserId).collect(Collectors.toSet());
         if (CollectionUtils.isEmpty(userIds)) {
             return;
         }
 
+        // 获取登录用户关注userIds集合中的所有记录
         List<UserRelationDO> relationList = userRelationDao.listUserRelations(loginUserId, userIds);
+        // 将查询出来的关注关系列表转换为 Map，
+        // 其中 key 为被关注用户的 ID，value 为对应的关注关系记录。
         Map<Long, UserRelationDO> relationMap = MapUtils.toMap(relationList, UserRelationDO::getUserId, r -> r);
+        // 更新关注列表数据
         followList.getList().forEach(follow -> {
             UserRelationDO relation = relationMap.get(follow.getUserId());
             if (relation == null) {
@@ -93,7 +105,7 @@ public class UserRelationServiceImpl implements UserRelationService {
     }
 
     /**
-     * 根据登录用户从给定用户列表中，找出已关注的用户id
+     * 判断userIds是否被某一个用户关注了
      *
      * @param userIds    主用户列表
      * @param fansUserId 粉丝用户id
@@ -110,6 +122,8 @@ public class UserRelationServiceImpl implements UserRelationService {
         return relationMap.values().stream().filter(s -> s.getFollowState().equals(FollowStateEnum.FOLLOW.getCode())).map(UserRelationDO::getUserId).collect(Collectors.toSet());
     }
 
+    // 处理关注行为，
+    // 当前登录用户关注了或取关了参数中传入的用户
     @Override
     public void saveUserRelation(UserRelationReq req) {
         // 查询是否存在

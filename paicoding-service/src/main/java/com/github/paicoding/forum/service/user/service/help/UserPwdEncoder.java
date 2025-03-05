@@ -21,6 +21,7 @@ public class UserPwdEncoder {
     @Value("${security.salt}")
     private String salt;
 
+    // 代表在原密码index=3的位置插入盐值
     @Value("${security.salt-index}")
     private Integer saltIndex;
 
@@ -35,11 +36,15 @@ public class UserPwdEncoder {
      * @return
      */
     public String encPwd(String plainPwd) {
+        // 加盐
+        // 如果长度大于加盐位置，那么就插入到相应位置
+        // 否则直接插入到最后
         if (plainPwd.length() > saltIndex) {
             plainPwd = plainPwd.substring(0, saltIndex) + salt + plainPwd.substring(saltIndex);
         } else {
             plainPwd = plainPwd + salt;
         }
+        // md5加密
         return DigestUtils.md5DigestAsHex(plainPwd.getBytes(StandardCharsets.UTF_8));
     }
 

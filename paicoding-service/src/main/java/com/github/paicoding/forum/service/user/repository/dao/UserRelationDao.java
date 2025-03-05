@@ -44,13 +44,15 @@ public class UserRelationDao extends ServiceImpl<UserRelationMapper, UserRelatio
     }
 
     /**
-     * 查询followUserId与给定的用户列表的关联关旭
+     * 查询followUserId是否关注了给定的用户列表的关联关系
      *
      * @param followUserId 粉丝用户id
      * @param targetUserId 关注者用户id列表
      * @return
      */
     public List<UserRelationDO> listUserRelations(Long followUserId, Collection<Long> targetUserId) {
+        // 等值条件，表示查询的记录中 followUserId 字段必须等于传入的参数 followUserId。
+        // IN 条件，表示查询记录中 userId 字段的值必须在传入的 targetUserId 集合中。
         return lambdaQuery().eq(UserRelationDO::getFollowUserId, followUserId)
                 .in(UserRelationDO::getUserId, targetUserId).list();
     }
@@ -90,8 +92,8 @@ public class UserRelationDao extends ServiceImpl<UserRelationMapper, UserRelatio
     /**
      * 获取关注记录
      *
-     * @param userId       登录用户
-     * @param followUserId 关注的用户
+     * @param userId       被关注的用户
+     * @param followUserId 登录的用户
      * @return
      */
     public UserRelationDO getUserRelationRecord(Long userId, Long followUserId) {

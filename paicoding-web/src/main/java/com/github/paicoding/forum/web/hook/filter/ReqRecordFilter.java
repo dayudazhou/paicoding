@@ -44,6 +44,8 @@ import java.util.concurrent.TimeUnit;
  * @date 2022/7/6
  */
 @Slf4j
+// 声明这是一个 Servlet 过滤器，拦截所有请求（"/*"），
+// 名称为 "reqRecordFilter"，并支持异步请求处理。
 @WebFilter(urlPatterns = "/*", filterName = "reqRecordFilter", asyncSupported = true)
 public class ReqRecordFilter implements Filter {
     private static Logger REQ_LOG = LoggerFactory.getLogger("req");
@@ -52,9 +54,11 @@ public class ReqRecordFilter implements Filter {
      */
     private static final String GLOBAL_TRACE_ID_HEADER = "g-trace-id";
 
+    // 负责初始化全局配置信息和用户登录信息
     @Autowired
     private GlobalInitService globalInitService;
 
+    // 用于统计请求计数等站点统计信息
     @Autowired
     private StatisticsSettingService statisticsSettingService;
 
@@ -66,15 +70,19 @@ public class ReqRecordFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         long start = System.currentTimeMillis();
         HttpServletRequest request = null;
+        // 1. 计时与请求开始
         StopWatch stopWatch = new StopWatch("请求耗时");
         try {
             stopWatch.start("请求参数构建");
+            // 2. 初始化请求上下文
             request = this.initReqInfo((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
             stopWatch.stop();
+            // 3. 进行跨域设置
             stopWatch.start("cors");
             CrossUtil.buildCors(request, (HttpServletResponse) servletResponse);
             stopWatch.stop();
             stopWatch.start("业务执行");
+            // 将请求传递给下一个过滤器或最终的目标资源
             filterChain.doFilter(request, servletResponse);
         } finally {
             if (stopWatch.isRunning()) {
@@ -118,6 +126,7 @@ public class ReqRecordFilter implements Filter {
             ReqInfoContext.ReqInfo reqInfo = new ReqInfoContext.ReqInfo();
             reqInfo.setHost(request.getHeader("host"));
             reqInfo.setPath(request.getPathInfo());
+            // 如果为空，则从请求 URL 中剥离查询参数得到路径。
             if (reqInfo.getPath() == null) {
                 String url = request.getRequestURI();
                 int index = url.indexOf("?");
@@ -131,6 +140,8 @@ public class ReqRecordFilter implements Filter {
             reqInfo.setUserAgent(request.getHeader("User-Agent"));
             reqInfo.setDeviceId(getOrInitDeviceId(request, response));
 
+            // 对 POST 请求，通过 wrapperRequest 包装请求，
+            // 提取请求体字符串（payload）存入 ReqInfo 对象
             request = this.wrapperRequest(request, reqInfo);
             stopWatch.stop();
 
@@ -138,7 +149,8 @@ public class ReqRecordFilter implements Filter {
             // 初始化登录信息
             globalInitService.initLoginUser(reqInfo);
             stopWatch.stop();
-
+            // 根据请求中的 Cookie、Token 或其他认证信息初始化登录状态，
+            // 将用户信息填入 reqInfo。
             ReqInfoContext.addReqInfo(reqInfo);
             stopWatch.start("pv/uv站点统计");
             // 更新uv/pv计数
@@ -197,6 +209,9 @@ public class ReqRecordFilter implements Filter {
             return request;
         }
 
+        // 针对 POST 请求，将原始请求包装成一个可以多次读取请求体的
+        // HttpServletRequest（通过 BodyReaderHttpServletRequestWrapper），
+        // 并提取请求体内容存入 ReqInfo 的 payload 字段。
         BodyReaderHttpServletRequestWrapper requestWrapper = new BodyReaderHttpServletRequestWrapper(request);
         reqInfo.setPayload(requestWrapper.getBodyString());
         return requestWrapper;

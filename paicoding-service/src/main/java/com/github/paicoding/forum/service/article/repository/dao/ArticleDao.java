@@ -88,6 +88,7 @@ public class ArticleDao extends ServiceImpl<ArticleMapper, ArticleDO> {
      * @return false 表示需要展示审核中的字样 | true 表示展示原文
      */
     private boolean showReviewContent(ArticleDO article) {
+        // 如果不是审核状态，就直接展示
         if (article.getStatus() != PushStatusEnum.REVIEW.getCode()) {
             return true;
         }

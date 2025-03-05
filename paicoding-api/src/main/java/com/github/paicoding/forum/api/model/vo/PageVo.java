@@ -15,15 +15,15 @@ import java.util.List;
 @NoArgsConstructor
 public class PageVo<T> {
 
-    private List<T> list;
+    private List<T> list; // 数据信息
 
-    private long pageSize;
+    private long pageSize; // 每页多少记录
 
-    private long pageNum;
+    private long pageNum; // 第几页
 
-    private long pageTotal;
+    private long pageTotal; // 总页数
 
-    private long total;
+    private long total; // 总记录数
 
     /**
      * 构造方法，int参数，需去除
