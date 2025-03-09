@@ -23,7 +23,7 @@
             </div>
             <div class="dropdown-menu">
               <a class="dropdown-item" href="/">首页</a>
-              <a class="dropdown-item" href="/column">教程</a>
+              <a class="dropdown-item" href="/column">专栏</a>
               <a class="dropdown-item" href="/chat">AI助手</a>
             </div>
           </div>
@@ -43,7 +43,7 @@
                   th:class="${'nav-item' + (#strings.equals(global.currentDomain, 'column') ? ' selected-domain' : '')}"
                   class="nav-item"
           >
-            <a class="nav-link" href="/column">教程</a>
+            <a class="nav-link" href="/column">专栏</a>
           </li>
           <li
                   th:class="${'nav-item' + (#strings.equals(global.currentDomain, 'chat') ? ' selected-domain' : '')}"
@@ -219,29 +219,29 @@
                 </a>
               </div>
             </div>
-            <div class="tabpane-container">
-              <h2 class="title">微信扫码/长按识别登录</h2>
-              <div class="first">
-                <img class="signin-qrcode" th:src="${global.siteInfo.contactMeWxQrCode}"/>
-              </div>
+<!--            <div class="tabpane-container">-->
+<!--              <h2 class="title">微信扫码/长按识别登录</h2>-->
+<!--              <div class="first">-->
+<!--                <img class="signin-qrcode" th:src="${global.siteInfo.contactMeWxQrCode}"/>-->
+<!--              </div>-->
 
-              <div class="explain">
-                <bold>输入验证码</bold>
-                <span id="code"></span>
-                <div><span id="state">有效期五分钟 👉</span> <a id="refreshCode">手动刷新</a></div>
-              </div>
-            </div>
+<!--              <div class="explain">-->
+<!--                <bold>输入验证码</bold>-->
+<!--                <span id="code"></span>-->
+<!--                <div><span id="state">有效期五分钟 👉</span> <a id="refreshCode">手动刷新</a></div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </div>
         <div class="modal-footer">
           <div class="agreement-box">
             <div class="mdnice-user-dialog-footer">
               <p>登录即同意
-                <a href="article/detail/141"
+                <a href="http://localhost:8080/article/detail/2506455291150337"
                    target="_blank" rel="noopener noreferrer">
                   用户协议
                 </a> 和
-                <a href="article/detail/142"
+                <a href="http://localhost:8080/article/detail/2506455291150337"
                    target="_blank" rel="noopener noreferrer">
                   隐私政策
                 </a>
@@ -322,18 +322,18 @@
                 </form>
               </div>
             </div>
-            <div class="tabpane-container">
-              <h2 class="title">添加二哥微信 itwanger 审核更快</h2>
-              <div class="first">
-                <img class="signin-qrcode" th:src="${global.siteInfo.contactMeStarQrCode}"/>
-              </div>
+<!--            <div class="tabpane-container">-->
+<!--              <h2 class="title">添加二哥微信 itwanger 审核更快</h2>-->
+<!--              <div class="first">-->
+<!--                <img class="signin-qrcode" th:src="${global.siteInfo.contactMeStarQrCode}"/>-->
+<!--              </div>-->
 
-              <div class="explain">
-                <bold>记得备注</bold>
-                <code>星球编号</code>
-                <div>我会根据星球编号进行审核</div>
-              </div>
-            </div>
+<!--              <div class="explain">-->
+<!--                <bold>记得备注</bold>-->
+<!--                <code>星球编号</code>-->
+<!--                <div>我会根据星球编号进行审核</div>-->
+<!--              </div>-->
+<!--            </div>-->
           </div>
         </div>
       </div>

@@ -59,6 +59,6 @@ public class PaiAiDemoServiceImpl extends AbsChatService {
 
     @Override
     protected int getMaxQaCnt(Long user) {
-        return 65535;
+        return 100;
     }
 }

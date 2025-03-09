@@ -91,13 +91,13 @@ public final class ChatConstants {
     public static final long QAS_TIME_INTERVAL = 20_000;
 
 
-    public static final String CHAT_REPLY_RECOMMEND = "请注册技术派之后再来体验吧，技术派官网： \n https://paicoding.com";
-    public static final String CHAT_REPLY_BEGIN = "让我们开始体验ChatGPT的魅力吧~";
+    public static final String CHAT_REPLY_RECOMMEND = "请注册登录之后再来体验吧";
+    public static final String CHAT_REPLY_BEGIN = "让我们开始体验DeepSeek的魅力吧~";
     public static final String CHAT_REPLY_OVER = "体验结束，让我们下次再见吧~";
-    public static final String CHAT_REPLY_CNT_OVER = "次数使用完了哦，勾搭一下群主，多申请点使用次数吧~\n微信：itwanger";
+    public static final String CHAT_REPLY_CNT_OVER = "次数使用完了哦，明天再来吧～";
 
 
-    public static final String CHAT_REPLY_TIME_WAITING = "chatgpt还在努力回答中，请等待几秒之后再问一次吧....";
+    public static final String CHAT_REPLY_TIME_WAITING = "DeepSeek还在努力回答中，请等待几秒之后再问一次吧....";
     public static final String CHAT_REPLY_QAS_TOO_FAST = "提问太频繁了，喝一杯咖啡，暂缓一下...";
 
 
@@ -114,7 +114,7 @@ public final class ChatConstants {
     public static final String SWITCH_TO_OTHER_MODEL = "请右上角下拉框选择模型再使用";
 
 
-    public static final String SENSITIVE_QUESTION = "提问中包含敏感词:%s，请重试";
+    public static final String SENSITIVE_QUESTION = "提问中包含敏感词:%s，请修改后提问";
 
     /**
      * 提示词标识
