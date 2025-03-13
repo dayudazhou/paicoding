@@ -7,8 +7,8 @@ image:
     type: ali
     prefix: paicoding/
     endpoint: oss-cn-beijing.aliyuncs.com
-    ak: LTAI5tFkP2bUcwE9wDVKErmF
-    sk: SOSv23jnbkjsWrMNRvMTMcMFuwhOWv
+    ak:
+    sk:
     bucket: devcoding
     host: https://devcoding.oss-cn-beijing.aliyuncs.com/
 
