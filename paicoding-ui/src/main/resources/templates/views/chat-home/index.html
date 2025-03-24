@@ -24,8 +24,8 @@
                 <div class="window-header-title">
                     <div class="name">
                         <div class="window-header-main-title home_chat-body-title__5S8w4"
-                             th:data-target="${!global.isLogin ? '#loginModal' : (global.user.starStatus.code == -1 ? '#registerModal' : '')}"
-                             th:data-toggle="${!global.isLogin || global.user.starStatus.code == -1 ? 'modal' : ''}">
+                             th:data-target="${!global.isLogin ? '#loginModal' : ''}"
+                             th:data-toggle="${!global.isLogin  ? 'modal' : ''}">
                             点击登录，体验AI助手
                         </div>
                         <div class="chat-annotation" th:if="${global.user != null}">

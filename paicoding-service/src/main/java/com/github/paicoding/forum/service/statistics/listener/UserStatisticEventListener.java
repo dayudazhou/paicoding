@@ -37,9 +37,10 @@ public class UserStatisticEventListener {
     public void notifyMsgListener(NotifyMsgEvent msgEvent) {
         switch (msgEvent.getNotifyType()) {
             case COMMENT:
-            case REPLY:
                 CommentDO comment = (CommentDO) msgEvent.getContent();
                 RedisClient.hIncr(CountConstants.ARTICLE_STATISTIC_INFO + comment.getArticleId(), CountConstants.COMMENT_COUNT, 1);
+                break;
+            case REPLY:
                 break;
             case DELETE_COMMENT:
             case DELETE_REPLY:

@@ -22,6 +22,7 @@ public class SessionUtil {
 
     public static Cookie newCookie(String key, String session, String path, int maxAge) {
         Cookie cookie = new Cookie(key, session);
+        // path用于控制哪些url携带cookie，"/"表示所有url都有效
         cookie.setPath(path);
         cookie.setMaxAge(maxAge);
         return cookie;

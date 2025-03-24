@@ -150,7 +150,8 @@ public class ReqRecordFilter implements Filter {
             globalInitService.initLoginUser(reqInfo);
             stopWatch.stop();
             // 根据请求中的 Cookie、Token 或其他认证信息初始化登录状态，
-            // 将用户信息填入 reqInfo。
+            // 将将构造好的 ReqInfo 对象放入线程上下文中，
+            // 以便后续在请求链路中通过 ReqInfoContext.getReqInfo() 获取
             ReqInfoContext.addReqInfo(reqInfo);
             stopWatch.start("pv/uv站点统计");
             // 更新uv/pv计数
@@ -222,6 +223,7 @@ public class ReqRecordFilter implements Filter {
                 || request.getRequestURI().endsWith("css")
                 || request.getRequestURI().endsWith("js")
                 || request.getRequestURI().endsWith("png")
+                || request.getRequestURI().endsWith("jpg")
                 || request.getRequestURI().endsWith("ico")
                 || request.getRequestURI().endsWith("gif")
                 || request.getRequestURI().endsWith("svg")

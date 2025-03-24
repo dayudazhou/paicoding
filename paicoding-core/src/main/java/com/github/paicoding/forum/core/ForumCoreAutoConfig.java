@@ -41,7 +41,7 @@ public class ForumCoreAutoConfig {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(Caffeine.newBuilder().
                 // 设置过期时间，写入后五分钟国企
-                        expireAfterWrite(5, TimeUnit.MINUTES)
+                        expireAfterWrite(60, TimeUnit.SECONDS)
                 // 初始化缓存空间大小
                 .initialCapacity(100)
                 // 最大的缓存条数

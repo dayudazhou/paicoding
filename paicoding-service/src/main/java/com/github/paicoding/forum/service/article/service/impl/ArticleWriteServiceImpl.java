@@ -206,7 +206,7 @@ public class ArticleWriteServiceImpl implements ArticleWriteService {
      * @return
      */
     private boolean needToReview(ArticleDO article) {
-        // 把 admin 用户加入白名单
+        // admin不需要审核
         BaseUserInfoDTO user = ReqInfoContext.getReqInfo().getUser();
         if (user.getRole() != null && user.getRole().equalsIgnoreCase(UserRole.ADMIN.name())) {
             return false;
